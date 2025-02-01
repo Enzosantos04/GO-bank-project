@@ -2,11 +2,25 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 )
 
+const accountBalanceFile = "balance.txt"
+func writeBalancetoFile(balance float64){ // this function writes value to a text file 
+  balanceText := fmt.Sprint(balance)
+   os.WriteFile(accountBalanceFile, []byte(balanceText),0644)
+}
+
+func getBalanceFromFile() float64{ // this function gets the value from text file
+  data, _ := os.ReadFile(accountBalanceFile)
+  balanceText := string(data)
+ balance, _ := strconv.ParseFloat(balanceText, 64)
+ return balance
+}
 
 func main() {
- var balance float64 = 1000
+ var balance float64 = getBalanceFromFile()
  var withdraw float64
  var deposit float64
  var choice int 
@@ -31,6 +45,7 @@ if deposit <= 0{
 }
 balance += deposit // += means the var balance will be sum with deposit
 fmt.Println("Your new balance is:", balance)
+writeBalancetoFile(balance)
  }else if choice == 3{
     fmt.Print("Withdraw certain amount: ")
     fmt.Scan(&withdraw)
@@ -40,6 +55,7 @@ fmt.Println("Your new balance is:", balance)
     }
     balance -= withdraw
     fmt.Println("Your new Balance is:", balance)
+    writeBalancetoFile(balance)
   
  }else if choice == 4{
     fmt.Println("Exit successful, see you soon!")
